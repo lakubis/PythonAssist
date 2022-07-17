@@ -1,4 +1,5 @@
 import sympy as sp
+import numpy as np
 
 
 
@@ -19,19 +20,34 @@ def choose_gate(prob_var, gate_type = 0):
         gate['matrices'] = [mat0,zero_mat,zero_mat,zero_mat]
     elif gate_type == 1:
         gate['name'] = 'bitflip'
-        gate['matrices'] = [(1-var)*mat0,var*mat1,zero_mat,zero_mat]
+        #Normal
+        #gate['matrices'] = [(1-var)*mat0,var*mat1,zero_mat,zero_mat]
+        #Eksperimen
+        gate['matrices'] = [np.sqrt(1-var)*mat0,np.sqrt(var)*mat1,zero_mat,zero_mat]
     elif gate_type == 2:
         gate['name'] = 'bitphaseflip'
-        gate['matrices'] = [(1-var)*mat0,zero_mat,var*mat2,zero_mat]
+        #Normal
+        #gate['matrices'] = [(1-var)*mat0,zero_mat,var*mat2,zero_mat]
+        #Eksperimen
+        gate['matrices'] = [np.sqrt(1-var)*mat0,zero_mat,np.sqrt(var)*mat2,zero_mat]
     elif gate_type == 3:
         gate['name'] = 'phaseflip'
-        gate['matrices'] = [(1-var)*mat0,zero_mat,zero_mat,var*mat3]
+        #Normal
+        #gate['matrices'] = [(1-var)*mat0,zero_mat,zero_mat,var*mat3]
+        #Eksperimen
+        gate['matrices'] = [np.sqrt(1-var)*mat0,zero_mat,zero_mat,np.sqrt(var)*mat3]
     elif gate_type == 4:
         gate['name'] = 'depolarizing'
-        gate['matrices'] = [(1-(3*var/4))*mat0,(var/4)*mat1,(var/4)*mat2,(var/4)*mat3]
+        #Normal
+        #gate['matrices'] = [(1-(3*var/4))*mat0,(var/4)*mat1,(var/4)*mat2,(var/4)*mat3]
+        #Eksperimen
+        gate['matrices'] = [np.sqrt(1-(3*var/4))*mat0,np.sqrt(var/4)*mat1,np.sqrt(var/4)*mat2,np.sqrt(var/4)*mat3]
     elif gate_type == 5:
         gate['name'] = 'fully depolarizing'
-        gate['matrices'] = [sp.Rational(1/4)*mat0,sp.Rational(1/4)*mat1,sp.Rational(1/4)*mat2,sp.Rational(1/4)*mat3]
+        #Normal
+        #gate['matrices'] = [sp.Rational(1/4)*mat0,sp.Rational(1/4)*mat1,sp.Rational(1/4)*mat2,sp.Rational(1/4)*mat3]
+        #Eksperimen
+        gate['matrices'] = [sp.Rational(np.sqrt(1/4))*mat0,sp.Rational(np.sqrt(1/4))*mat1,sp.Rational(np.sqrt(1/4))*mat2,sp.Rational(np.sqrt(1/4))*mat3]
     
     return gate
     
@@ -52,3 +68,13 @@ def vonNeumann(keys):
         else:
             von = von - i*sp.log(i)
     return von
+
+def get_keys(Eigen_value):
+    index = [k for k in Eigen_value]
+    keys = []
+    for i in index:
+        for j in range(Eigen_value[i]):
+            keys.append(i)
+    return keys
+
+pauli_gates = [sp.Matrix([[1,0],[0,1]]),sp.Matrix([[0,1],[1,0]]),sp.Matrix([[0,-sp.I],[sp.I,0]]),sp.Matrix([[1,0],[0,-1]])]
